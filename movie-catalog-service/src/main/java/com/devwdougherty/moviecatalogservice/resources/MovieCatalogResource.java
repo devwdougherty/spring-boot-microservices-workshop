@@ -1,8 +1,11 @@
 package com.devwdougherty.moviecatalogservice.resources;
 
 import com.devwdougherty.moviecatalogservice.models.CatalogItem;
+import com.devwdougherty.moviecatalogservice.models.Movie;
 import com.devwdougherty.moviecatalogservice.models.Rating;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,13 +16,14 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/catalog")
 public class MovieCatalogResource {
 
+    /**
+     * Default RestTemplate dependency.
+     */
+    @Autowired
+    private RestTemplate restTemplate;
+
     @GetMapping(value = "/{userId}")
     public List<CatalogItem> getCatalogItemByUserId(@PathVariable("userId") String userId) {
-
-        //List<CatalogItem> catalogItemList = new ArrayList<>();
-
-        //catalogItemList.add(new CatalogItem("Transformers", "Robotic Movie", 7));
-        //catalogItemList.add(new CatalogItem("HP 7", "Magic Movie", 8));
 
         /* Get all rated movie IDs */
         List<Rating> ratingList = Arrays.asList(
@@ -28,14 +32,12 @@ public class MovieCatalogResource {
                 new Rating("135", 10)
         );
 
-        return ratingList.stream().map(rating ->
-            new CatalogItem("Transformers", "Robotic Movie", 7)
-        )
-                .collect(Collectors.toList());
-
         /* For each movie ID, call movie info service and get details */
-
         /* Put them all together */
-        // return catalogItemList;
+        return ratingList.stream().map(rating -> {
+            Movie movie = restTemplate.getForObject("http://localhost:8081/movies/" + rating.getMovieId(), Movie.class);
+            return new CatalogItem(movie.getName(), "Desc", rating.getRating());
+        })
+                .collect(Collectors.toList());
     }
 }
