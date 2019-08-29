@@ -1,10 +1,18 @@
 package com.devwdougherty.movieinfoservice.models;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Movie {
 
+    @Id
     private String movieId;
 
     private String name;
+
+    public Movie() {
+    }
 
     public Movie(String movieId, String name) {
         this.movieId = movieId;

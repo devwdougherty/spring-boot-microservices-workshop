@@ -1,12 +1,24 @@
 package com.devwdougherty.moviecatalogservice.models;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class CatalogItem {
+
+    @Id
+    @GeneratedValue
+    private Long id;
 
     private String name;
 
     private String desc;
 
     private int rating;
+
+    public CatalogItem() {
+    }
 
     public CatalogItem(String name, String desc, int rating) {
         this.name = name;
