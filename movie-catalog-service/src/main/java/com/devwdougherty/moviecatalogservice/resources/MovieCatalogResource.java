@@ -6,6 +6,7 @@ import com.devwdougherty.moviecatalogservice.models.Rating;
 import com.devwdougherty.moviecatalogservice.models.UserRating;
 import com.devwdougherty.moviecatalogservice.repositories.CatalogItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,17 +27,21 @@ public class MovieCatalogResource {
     private RestTemplate restTemplate;
 
     @Autowired
+    private DiscoveryClient discoveryClient;
+
+    @Autowired
     private CatalogItemRepository catalogItemRepository;
 
     @GetMapping(value = "/{userId}")
     public List<CatalogItem> getCatalogItemByUserId(@PathVariable("userId") String userId) {
 
         /* Get all rated movie IDs */
-        UserRating ratingList = restTemplate.getForObject("http://localhost:8082/ratingsdata/users/" + userId, UserRating.class);
+        //UserRating ratingList = restTemplate.getForObject("http://localhost:8082/ratingsdata/users/" + userId, UserRating.class);
+        UserRating ratingList = restTemplate.getForObject("http://rating-data-service/ratingsdata/users/" + userId, UserRating.class);
 
         return ratingList.getUserRatingList().stream().map(rating -> {
             /* For each movie ID, call movie info service and get details */
-            Movie movie = restTemplate.getForObject("http://localhost:8081/movies/" + rating.getMovieId(), Movie.class);
+            Movie movie = restTemplate.getForObject("http://movie-info-service/movies/" + rating.getMovieId(), Movie.class);
             /* Put them all together */
             String persistedDesc = catalogItemRepository.findByname(movie.getName()).getDesc();
 
