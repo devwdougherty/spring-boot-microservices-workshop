@@ -21,9 +21,9 @@ public class Instantiation implements ApplicationRunner {
 
         movieRepository.deleteAll();
 
-        Movie movie1 = new Movie("123", "Harry Potter");
-        Movie movie2 = new Movie("321", "Sing");
-        Movie movie3 = new Movie("555", "Piratas do caribe");
+        Movie movie1 = new Movie("123", "Harry Potter", "A magic movie");
+        Movie movie2 = new Movie("321", "Sing", "A music movie");
+        Movie movie3 = new Movie("555", "Piratas do caribe", "A pirate movie");
 
         movieRepository.saveAll(Arrays.asList(movie1, movie2, movie3));
     }
