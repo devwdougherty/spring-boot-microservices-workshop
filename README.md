@@ -8,6 +8,7 @@ A basic project to structure communication among 3 microservices with load balan
 - RestTemplate and WebClient Example
 - Load Balance
 - Service Discovery with Eureka Server
+- API MovieDB
 
 # Building the Project
 
